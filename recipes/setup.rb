@@ -17,19 +17,6 @@
 # limitations under the License.
 #
 
-script "bind data dir" do
-  interpreter "bash"
-  user "root"
-  cwd "/tmp"
-  code <<-EOH
-  sudo mkdir #{node['postgresql']['bind_dir']}/postgresql
-  echo "#{node['postgresql']['bind_dir']}/postgresql /var/lib/postgresql auto bind,defaults 0 0" | sudo tee -a /etc/fstab
-  sudo mount /var/lib/postgresql
-  EOH
-  only_if "test -d #{node['postgresql']['bind_dir']}"
-  not_if "test -d #{node['postgresql']['bind_dir']}/postgresql"
-end
-
 setup_items = []
 
 node['postgresql']['setup_items'].each do |itemname|

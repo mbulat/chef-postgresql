@@ -19,13 +19,22 @@
 # limitations under the License.
 #
 
-::Chef::Recipe.send(:include, Opscode::OpenSSL::Password)
+script "bind data dir" do
+  interpreter "bash"
+  user "root"
+  cwd "/tmp"
+  code <<-EOH
+  sudo mkdir #{node['postgresql']['bind_dir']}/postgresql
+  echo "#{node['postgresql']['bind_dir']}/postgresql /var/lib/postgresql auto bind,defaults 0 0" | sudo tee -a /etc/fstab
+  sudo mount /var/lib/postgresql
+  EOH
+  only_if "test -d #{node['postgresql']['bind_dir']}"
+  not_if "test -d #{node['postgresql']['bind_dir']}/postgresql"
+end
 
 include_recipe "postgresql::client"
 
-# randomly generate postgres password
-node.set_unless[:postgresql][:password][:postgres] = secure_password
-node.save unless Chef::Config[:solo]
+postgres_pass = Chef::EncryptedDataBagItem.load("passwords", "postgresql")["password"]
 
 case node[:postgresql][:version]
 when "8.3"
@@ -67,7 +76,7 @@ end
 bash "assign-postgres-password" do
   user 'postgres'
   code <<-EOH
-echo "ALTER ROLE postgres ENCRYPTED PASSWORD '#{node[:postgresql][:password][:postgres]}';" | psql
+echo "ALTER ROLE postgres ENCRYPTED PASSWORD '#{postgres_pass}';" | psql
   EOH
   only_if "invoke-rc.d postgresql status | grep main" # make sure server is actually running
   not_if do
@@ -75,7 +84,7 @@ echo "ALTER ROLE postgres ENCRYPTED PASSWORD '#{node[:postgresql][:password][:po
       require 'rubygems'
       Gem.clear_paths
       require 'pg'
-      conn = PGconn.connect("localhost", 5432, nil, nil, nil, "postgres", node['postgresql']['password']['postgres'])
+      conn = PGconn.connect("localhost", 5432, nil, nil, nil, "postgres", postgres_pass)
     rescue PGError
       false
     end
