@@ -20,9 +20,8 @@
 setup_items = []
 
 node['postgresql']['setup_items'].each do |itemname|
-  search(:postgresql, "id:#{itemname}") do |i|
-    setup_items << i
-  end
+  i = Chef::EncryptedDataBagItem.load("postgresql",itemname)
+  setup_items << i
 end
 
 postgres_pass = Chef::EncryptedDataBagItem.load("passwords", "postgresql")["password"]
