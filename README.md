@@ -60,6 +60,8 @@ The following attributes are set based on the platform, see the
 * `node['postgresql']['version']` - version of postgresql to manage
 * `node['postgresql']['dir']` - home directory of where postgresql
   data and configuration lives.
+* `node['postgresql']['bind_dir']` - the mount directory data will
+  be bound to. This is `/raiddisk` by default (ie that directory must exist.
 
 The following attributes are generated in
 `recipe[postgresql::server]`.

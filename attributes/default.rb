@@ -27,6 +27,7 @@ when "debian"
   end
 
   set[:postgresql][:dir] = "/etc/postgresql/#{node[:postgresql][:version]}/main"
+  set[:postgresql][:bind_dir] = "/raiddisk"
 
 when "ubuntu"
 
@@ -40,6 +41,7 @@ when "ubuntu"
   end
 
   set[:postgresql][:dir] = "/etc/postgresql/#{node[:postgresql][:version]}/main"
+  set[:postgresql][:bind_dir] = "/raiddisk"
 
 when "fedora"
 
@@ -50,11 +52,13 @@ when "fedora"
   end
 
   set[:postgresql][:dir] = "/var/lib/pgsql/data"
+  set[:postgresql][:bind_dir] = "/raiddisk"
 
 when "redhat","centos","scientific","amazon"
 
   default[:postgresql][:version] = "8.4"
   set[:postgresql][:dir] = "/var/lib/pgsql/data"
+  set[:postgresql][:bind_dir] = "/raiddisk"
 
 when "suse"
 
@@ -65,10 +69,12 @@ when "suse"
   end
 
   set[:postgresql][:dir] = "/var/lib/pgsql/data"
+  set[:postgresql][:bind_dir] = "/raiddisk"
 
 else
   default[:postgresql][:version] = "8.4"
   set[:postgresql][:dir]         = "/etc/postgresql/#{node[:postgresql][:version]}/main"
+  set[:postgresql][:bind_dir] = "/raiddisk"
 end
 
 # Host Based Access
