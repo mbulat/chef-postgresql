@@ -25,6 +25,8 @@ node['postgresql']['setup_items'].each do |itemname|
   end
 end
 
+postgres_pass = Chef::EncryptedDataBagItem.load("passwords", "postgresql")["password"]
+
 setup_items.each do |setup|
   
   # The postgres user's password is automatically created
@@ -34,7 +36,7 @@ setup_items.each do |setup|
     :host => "127.0.0.1",
     :port => "5432",
     :username => "postgres",
-    :password => node['postgresql']['password']['postgres']
+    :password => postgres_pass
   }
   
   # Create database Users

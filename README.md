@@ -1,9 +1,8 @@
 Description
 ===========
-This is a fork of the Opscode PostgreSQL cookbook, which has been modified 
+This is a *fork of a fork* of the Opscode PostgreSQL cookbook, which has been modified 
 extensively.
 
-* Adds support for PostgresQL 9.1 on Ubuntu 10.04 (Lucid) using a PPA. 
 * Adds a recipe to create PostgreSQL user accounts and databases (this 
   particular addition couples this to the `database` cookbook)
 
@@ -65,13 +64,11 @@ The following attributes are set based on the platform, see the
 The following attributes are generated in
 `recipe[postgresql::server]`.
 
-* `node['postgresql']['password']['postgres']` - randomly generated
-  password by the `openssl` cookbook's library.
 * `node['postgresql']['ssl']` - whether to enable SSL (off for version
   8.3, true for 8.4).
 
 The following attribute is used by the `setup` recipe:
-* `node['postgresql']['setup_items']` - a list of data bag items 
+* `node['postgresql']['setup_items']` - a list of **encrypted** data bag items 
   containing user/database information 
 
 There are also a number of other attributes defined that control 
@@ -129,22 +126,6 @@ Recipes
 This recipe just includes the `postgresql::client` recipe, which installs the
 postgresql client package and required dependencies.
 
-`apt_postgresql_ppa`
---------------------
-Adds sources for a PosgresSQL 9.1 package for _Ubuntu 10.04_. **NOTE** that this
-recipe should only be used in Ubuntu 10.04. Newer versions of Ubuntu include
-PostgreSQL 9.1 in their package repository.
-
-To use this, you'll need to specify the PostgreSQL `version` and `dir` 
-attributes. For example, add the folloing to your role:
-
-    override_attributes(
-      :postgresql => {
-        :version => "9.1",
-        :dir => "/etc/postgresql/9.1/main"  
-      }
-    ) 
-
 `client`
 --------
 
@@ -160,8 +141,16 @@ Includes the `server_debian` or `server_redhat` recipe to get the
 appropriate server packages installed and service managed. Also
 manages the configuration for the server:
 
-* generates a strong default password (via `openssl`) for `postgres`
-* sets the password for postgres
+* sets the main password for postgres from an **encrypted** data bag called 'passwords'
+
+    {
+      "id": "postgresql",
+      "password": "my_password"
+    }
+
+NOTE: Ensure your knife.rb file has `encrypted_data_bag_secret '/path/to/your/data_bag_key'`
+See: [http://wiki.opscode.com/display/chef/Encrypted+Data+Bags](http://wiki.opscode.com/display/chef/Encrypted+Data+Bags)
+
 * manages the `pg_hba.conf` file.
 
 `server_debian`
@@ -204,11 +193,8 @@ cookbook, or elsewhere in the same Chef run. Use Opscode's
 installed so the C extensions can be compiled.
 
 On systems that should be PostgreSQL servers, use
-`recipe[postgresql::server]` on a run list. This recipe does set a
-password and expect to use it. It performs a node.save when Chef is
-not running in `solo` mode. If you're using `chef-solo`, you'll need
-to set the attribute `node['postgresql']['password']['postgres']` in
-your node's `json_attribs` file or in a role.
+`recipe[postgresql::server]` on a run list. This recipe expects an encrypted data bag
+'passwords' with a 'postgresql'. 
 
 Streaming Replication/Hot Standby
 ---------------------------------
@@ -292,8 +278,8 @@ was available at an ip address of `10.0.0.1`:
 
 ### User/Database Setup
 
-To configure users and databases, create a `postgresql` data bag, and add items
-that look similar to the following:
+To configure users and databases, create a `postgresql` data bag, and add **encrypted**
+data bag items that look similar to the following:
 
     {
         "id": "sample",
