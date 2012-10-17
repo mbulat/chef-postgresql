@@ -18,18 +18,18 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
+#
 
-script "bind data dir" do
-  interpreter "bash"
-  user "root"
-  cwd "/tmp"
-  code <<-EOH
-  sudo mkdir #{node['postgresql']['bind_dir']}/postgresql
-  echo "#{node['postgresql']['bind_dir']}/postgresql /var/lib/postgresql auto bind,defaults 0 0" | sudo tee -a /etc/fstab
-  sudo mount /var/lib/postgresql
-  EOH
-  only_if "test -d #{node['postgresql']['bind_dir']}"
-  not_if "test -d #{node['postgresql']['bind_dir']}/postgresql"
+
+directory "/raiddisk/postgresql" do
+  owner "root"
+  group "root"
+  mode "0755"
+  action :create
+end
+
+link "/var/lib/postgresql" do
+ to "#{node['postgresql']['bind_dir']}/postgresql"
 end
 
 include_recipe "postgresql::client"
