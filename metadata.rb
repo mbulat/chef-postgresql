@@ -21,4 +21,3 @@ end
 end
 
 depends "apt"
-depends "database"
