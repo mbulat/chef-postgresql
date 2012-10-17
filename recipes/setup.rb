@@ -56,6 +56,7 @@ setup_items.each do |setup|
       Chef::Log.info("Creating Postgresql database: #{db['name']}")
       connection pg_connection_info
       owner     db["owner"]
+      collation db["collation"]
       encoding  db["encoding"]
       template  db["template"]
       action :create
