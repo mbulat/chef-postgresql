@@ -21,3 +21,4 @@ end
 end
 
 depends "apt"
+depends 'simple_iptables'

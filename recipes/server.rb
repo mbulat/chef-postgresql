@@ -20,6 +20,13 @@
 #
 #
 
+include_recipe "simple_iptables"
+
+# Allow postgres
+simple_iptables_rule "system" do
+  rule ["--proto tcp -m state --state NEW -s 10.0.0.0/8 --dport 5432"]
+  jump "ACCEPT"
+end
 
 directory "/raiddisk/postgresql" do
   owner "root"
