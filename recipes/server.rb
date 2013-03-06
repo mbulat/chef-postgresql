@@ -77,7 +77,7 @@ template "#{node[:postgresql][:dir]}/pg_hba.conf" do
 end
 
 template "#{node[:postgresql][:dir]}/clean_standby.sh" do
-  source clean_standby
+  source "clean_standby.sh.erb"
   owner "postgres"
   group "postgres"
   mode 0700
