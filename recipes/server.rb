@@ -76,6 +76,13 @@ template "#{node[:postgresql][:dir]}/pg_hba.conf" do
   notifies :reload, resources(:service => "postgresql"), :immediately
 end
 
+template "#{node[:postgresql][:dir]}/clean_standby.sh" do
+  source clean_standby
+  owner "postgres"
+  group "postgres"
+  mode 0700
+end
+
 # Default PostgreSQL install has 'ident' checking on unix user 'postgres'
 # and 'md5' password checking with connections from 'localhost'. This script
 # runs as user 'postgres', so we can execute the 'role' and 'database' resources
