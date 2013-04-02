@@ -161,6 +161,11 @@ shared_buffers = 24MB			# min 128kB
 # - Settings -
 <% if node.postgresql.master %>
 wal_level = <%= node.postgresql.wal_level %>
+archive_mode = on		# allows archiving to be done
+				# (change requires restart)
+archive_command = 'envdir /etc/wal-e.d/env /usr/local/bin/wal-e wal-push %p'		# command to use to archive a logfile segment
+archive_timeout = 60		# force a logfile segment switch after this
+				# number of seconds; 0 disables
 <% else %>
 #wal_level = minimal			# minimal, archive, or hot_standby
 					# (change requires restart)
@@ -191,11 +196,6 @@ wal_level = <%= node.postgresql.wal_level %>
 
 # - Archiving -
 
-archive_mode = on		# allows archiving to be done
-				# (change requires restart)
-archive_command = 'envdir /etc/wal-e.d/env /usr/local/bin/wal-e wal-push %p'		# command to use to archive a logfile segment
-archive_timeout = 60		# force a logfile segment switch after this
-				# number of seconds; 0 disables
 
 
 #------------------------------------------------------------------------------
