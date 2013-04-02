@@ -22,3 +22,4 @@ end
 
 depends "apt"
 depends 'simple_iptables'
+depends "wal-e"
