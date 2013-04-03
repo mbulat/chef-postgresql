@@ -166,20 +166,20 @@ archive_mode = on		# allows archiving to be done
 archive_command = 'envdir /etc/wal-e.d/env /usr/local/bin/wal-e wal-push %p'		# command to use to archive a logfile segment
 archive_timeout = 60		# force a logfile segment switch after this
 				# number of seconds; 0 disables
-<% else %>
-#wal_level = minimal			# minimal, archive, or hot_standby
-					# (change requires restart)
-<% end %>
-#fsync = on				# turns forced synchronization on or off
-#synchronous_commit = on		# synchronization level; on, off, or local
-#wal_sync_method = fsync		# the default is the first option
+fsync = on				# turns forced synchronization on or off
+synchronous_commit = on		# synchronization level; on, off, or local
+wal_sync_method = fsync		# the default is the first option
 					# supported by the operating system:
 					#   open_datasync
 					#   fdatasync (default on Linux)
 					#   fsync
 					#   fsync_writethrough
 					#   open_sync
-#full_page_writes = on			# recover from partial page writes
+full_page_writes = on			# recover from partial page writes
+<% else %>
+#wal_level = minimal			# minimal, archive, or hot_standby
+					# (change requires restart)
+<% end %>
 #wal_buffers = -1			# min 32kB, -1 sets based on shared_buffers
 					# (change requires restart)
 #wal_writer_delay = 200ms		# 1-10000 milliseconds
