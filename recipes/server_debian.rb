@@ -83,7 +83,8 @@ if node[:postgresql][:standby]
     mode 0600
     variables(
       :primary_conninfo => "host=#{master_ip} application_name=#{node_name}",
-      :trigger_file => "/var/lib/postgresql/#{node[:postgresql][:version]}/main/trigger"
+      :trigger_file => "/var/lib/postgresql/#{node[:postgresql][:version]}/main/trigger",
+      :restore_command => node[:postgresql][:restore_command]
     )
     notifies :restart, resources(:service => "postgresql")
   end

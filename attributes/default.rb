@@ -107,6 +107,7 @@ default[:postgresql][:standby_ips] = []
 # Standby Servers
 default[:postgresql][:standby] = false # Is this a standby?
 default[:postgresql][:master_ip] = nil # MUST Be specified in the role
+default[:postgresql][:restore_command] = nil # MUST Be specified in the role
 # None of the below settings get written unless the above is set to "true"
 default[:postgresql][:hot_standby] = "off"
 default[:postgresql][:max_standby_archive_delay] = "30s"

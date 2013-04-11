@@ -1,4 +1,6 @@
 standby_mode = 'on'
 primary_conninfo = '<%= @primary_conninfo %>'
-restore_command = 'envdir /etc/wal-e.d/env /usr/local/bin/wal-e wal-fetch "%f" "%p"'
+<% if @restore_command %>
+restore_command = '<%= @restore_command %>'
+<% end %>
 trigger_file = '<%= @trigger_file %>'
