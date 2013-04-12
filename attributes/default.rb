@@ -90,6 +90,7 @@ default[:postgresql][:listen_addresses] = "localhost"
 
 # Master Server
 default[:postgresql][:master] = false # Is this a master?
+default[:postgresql][:archive] = true # Should we do WAL archive?
 # None of the below settings get written unless the above is set to "true"
 default[:postgresql][:wal_level] = "minimal"
 default[:postgresql][:max_wal_senders] = 0
