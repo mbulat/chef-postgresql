@@ -98,7 +98,7 @@ if node[:postgresql][:master] && (not node[:postgresql][:standby_ips].empty?)
       cwd "/var/lib/postgresql/#{node[:postgresql][:version]}/main/"
       code <<-EOH
         invoke-rc.d postgresql stop
-        rsync -av --exclude=pg_xlog * #{address}:/var/lib/postgresql/#{node[:postgresql][:version]}/main/
+        rsync -e 'ssh -o UserKnownHostsFile=/dev/null StrictHostKeyChecking=no' -av --exclude=pg_xlog * #{address}:/var/lib/postgresql/#{node[:postgresql][:version]}/main/
         touch .initial_transfer_complete
         invoke-rc.d postgresql start
       EOH
