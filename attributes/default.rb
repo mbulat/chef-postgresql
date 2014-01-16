@@ -89,7 +89,7 @@ default[:postgresql][:hba] = [
 default[:postgresql][:listen_addresses] = "localhost"
 
 # IPtables private network
-default[:postgresql][:private_network] = "10.0.0.0/8"
+default[:postgresql][:private_networks] = ["10.0.0.0/8"]
 
 # Master Server
 default[:postgresql][:master] = false # Is this a master?

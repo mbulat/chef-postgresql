@@ -24,7 +24,9 @@ include_recipe "simple_iptables"
 
 # Allow postgres
 simple_iptables_rule "system" do
-  rule ["--proto tcp -m state --state NEW -s #{node['base']['private_network']} --dport 5432"]
+  node['postgresql']['private_networks'].each do |network|
+    rule ["--proto tcp -m state --state NEW -s #{network} --dport 5432"]
+  end
   jump "ACCEPT"
 end
 
