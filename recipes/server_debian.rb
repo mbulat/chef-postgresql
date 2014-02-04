@@ -30,6 +30,7 @@ else # > 8.3
 end
 
 package "postgresql"
+package "postgresql-contrib"
 
 service "postgresql" do
   case node['platform']
